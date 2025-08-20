@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>@{{ user.username }}</h2>
+        <p>Member since: {{ user.created_at.strftime('%B %Y') }}</p>
+    </div>
+    
+    <div class="profile-stats">
+        <div class="stat">
+            <h3>{{ posts|length }}</h3>
+            <p>Posts</p>
+        </div>
+    </div>
+    
+    <div class="user-posts">
+        <h3>Posts by @{{ user.username }}</h3>
+        
+        {% if posts %}
+            {% for post in posts %}
+            <div class="post-card">
+                <div class="post-content">
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="post-meta">
+                    <span>{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    <span>❤️ {{ post.likes|length }} likes</span>
+                    <span>💬 {{ post.comments|length }} comments</span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p>No posts yet</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="feed-header">
+    <h2>Your Feed</h2>
+    <a href="{{ url_for('create_post') }}" class="btn btn-primary">Create New Post</a>
+</div>
+
+{% if posts %}
+    {% for post in posts %}
+    <div class="post-card">
+        <div class="post-header">
+            <div class="user-info">
+                <strong>@{{ post.author.username }}</strong>
+                <span class="post-time">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+            </div>
+        </div>
+        
+        <div class="post-content">
+            <p>{{ post.content }}</p>
+        </div>
+        
+        <div class="post-stats">
+            <span>❤️ {{ post.likes|length }} likes</span>
+            <span>💬 {{ post.comments|length }} comments</span>
+        </div>
+        
+        <div class="post-actions">
+            <a href="{{ url_for('like_post', post_id=post.id) }}" class="btn-like">
+                {% set user_liked = post.likes|selectattr('user_id', 'equalto', current_user.id)|list %}
+                {% if user_liked %}❤️ Unlike{% else %}🤍 Like{% endif %}
+            </a>
+            
+            <form action="{{ url_for('add_comment', post_id=post.id) }}" method="post" class="comment-form">
+                <input type="text" name="content" placeholder="Write a comment..." required>
+                <button type="submit" class="btn-comment">Comment</button>
+            </form>
+        </div>
+        
+        {% if post.comments %}
+        <div class="comments-section">
+            <h4>Comments:</h4>
+            {% for comment in post.comments %}
+            <div class="comment">
+                <strong>@{{ comment.author.username }}:</strong>
+                <span>{{ comment.content }}</span>
+                <small>{{ comment.created_at.strftime('%H:%M') }}</small>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <h3>No posts yet</h3>
+        <p>Be the first to create a post!</p>
+        <a href="{{ url_for('create_post') }}" class="btn btn-primary">Create Post</a>
+    </div>
+{% endif %}
+{% endblock %}
