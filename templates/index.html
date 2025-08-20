@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>🐾 Welcome to DogSoc! 🐾</h1>
+    <p>Where dog lovers connect, share, and bark about everything!</p>
+    <div class="auth-buttons">
+        <a href="{{ url_for('login') }}" class="btn btn-primary">🐶 Join the Pack</a>
+        <a href="{{ url_for('register') }}" class="btn btn-secondary">📝 Sign Up</a>
+    </div>
+</div>
+
+<div class="features">
+    <div class="feature">
+        <h3>🐕 Share Dog Tales</h3>
+        <p>Post stories and photos of your furry friends</p>
+    </div>
+    <div class="feature">
+        <h3>❤️ Paw-some Interactions</h3>
+        <p>Like and comment on other dogs' adventures</p>
+    </div>
+    <div class="feature">
+        <h3>👥 Pack Profiles</h3>
+        <p>Create your dog's personal profile page</p>
+    </div>
+</div>
+{% endblock %}
