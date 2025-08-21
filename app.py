@@ -5,7 +5,7 @@ from models import db, User, Post, Like, Comment
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-here')
+app.config['monkey60'] = os.environ.get('SECRET_KEY', 'dev-secret-key-here')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -40,3 +40,4 @@ if __name__ == '__main__':
         db.create_all()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
+
