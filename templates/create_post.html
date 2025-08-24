@@ -3,14 +3,47 @@
 {% block content %}
 <div class="create-post-container">
     <h2>Create New Post</h2>
-    <form method="POST" class="post-form">
+    <form method="POST" class="post-form" enctype="multipart/form-data">
         <div class="form-group">
-            <textarea name="content" placeholder="What's on your mind?" required></textarea>
+            <textarea name="content" placeholder="What's on your mind?" rows="4"></textarea>
         </div>
+        
+        <div class="image-upload">
+            <div class="image-preview" id="imagePreview">
+                <p>Select an image to preview</p>
+                <img id="previewImage" src="" alt="Preview">
+            </div>
+            
+            <input type="file" id="imageInput" name="image" accept="image/*" class="file-input">
+            <label for="imageInput" class="file-label">📸 Choose Image</label>
+        </div>
+        
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Post</button>
             <a href="{{ url_for('feed') }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
+
+<script>
+document.getElementById('imageInput').addEventListener('change', function(e) {
+    const preview = document.getElementById('imagePreview');
+    const image = document.getElementById('previewImage');
+    const file = e.target.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            image.src = e.target.result;
+            preview.classList.add('has-image');
+        }
+        
+        reader.readAsDataURL(file);
+    } else {
+        image.src = '';
+        preview.classList.remove('has-image');
+    }
+});
+</script>
 {% endblock %}
