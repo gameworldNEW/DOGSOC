@@ -11,6 +11,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     reset_token = db.Column(db.String(100))
+    avatar = db.Column(db.String(200))  # ✅ Аватар пользователя
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     posts = db.relationship('Post', backref='author', lazy=True)
@@ -26,6 +27,7 @@ class User(UserMixin, db.Model):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(200))  # ✅ Поле для изображения
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
