@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>DogSoc - Social Network for Dog Lovers</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐕 DogSoc - Social Network for Dog Lovers</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -26,6 +28,7 @@
                 <div class="nav-links">
                     <a href="{{ url_for('login') }}">🔐 Login</a>
                     <a href="{{ url_for('register') }}">📝 Register</a>
+                    <a href="{{ url_for('forgot_password') }}">❓ Forgot Password</a>
                 </div>
             {% endif %}
         </div>
@@ -42,5 +45,18 @@
         
         {% block content %}{% endblock %}
     </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>🐾 Made with love for dog lovers | DogSoc © 2024</p>
+            <div class="footer-links">
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                    <a href="{{ url_for('forgot_password') }}">Forgot Password</a>
+                {% endif %}
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
