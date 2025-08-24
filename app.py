@@ -1,5 +1,8 @@
+import os
+import secrets
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Post, Like, Comment
 from datetime import datetime
 
@@ -67,6 +70,58 @@ def login():
         flash('Invalid username or password')
     
     return render_template('login.html')
+
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('feed'))
+    
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        
+        if user:
+            # Генерируем токен для сброса
+            token = secrets.token_urlsafe(32)
+            user.reset_token = token
+            db.session.commit()
+            
+            # В реальном приложении здесь бы отправлялось email
+            reset_url = url_for('reset_password', token=token, _external=True)
+            flash(f'Ссылка для сброса пароля: {reset_url}')
+            return redirect(url_for('login'))
+        else:
+            flash('Email not found')
+    
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('feed'))
+    
+    user = User.query.filter_by(reset_token=token).first()
+    
+    if not user:
+        flash('Invalid or expired reset token')
+        return redirect(url_for('forgot_password'))
+    
+    if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        
+        if password != confirm_password:
+            flash('Passwords do not match')
+            return render_template('reset_password.html', token=token)
+        
+        user.set_password(password)
+        user.reset_token = None  # Удаляем токен после использования
+        db.session.commit()
+        
+        flash('Password reset successfully! Please login with your new password.')
+        return redirect(url_for('login'))
+    
+    return render_template('reset_password.html', token=token)
 
 @app.route('/logout')
 @login_required
