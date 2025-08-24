@@ -3,6 +3,25 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-header">
+        <div class="avatar-section">
+            {% if user.avatar %}
+            <img src="{{ url_for('uploaded_file', folder='avatars', filename=user.avatar) }}" 
+                 alt="Avatar" class="avatar-current">
+            {% else %}
+            <div class="avatar-current" style="background: #D7CCC8; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                🐕
+            </div>
+            {% endif %}
+            
+            {% if user.id == current_user.id %}
+            <form action="{{ url_for('upload_avatar') }}" method="post" enctype="multipart/form-data" class="avatar-form">
+                <input type="file" id="avatarInput" name="avatar" accept="image/*" class="file-input">
+                <label for="avatarInput" class="file-label">📸 Change Avatar</label>
+                <button type="submit" class="btn btn-primary btn-small">Upload</button>
+            </form>
+            {% endif %}
+        </div>
+        
         <h2>@{{ user.username }}</h2>
         <p>Member since: {{ user.created_at.strftime('%B %Y') }}</p>
     </div>
@@ -21,7 +40,14 @@
             {% for post in posts %}
             <div class="post-card">
                 <div class="post-content">
+                    {% if post.content %}
                     <p>{{ post.content }}</p>
+                    {% endif %}
+                    
+                    {% if post.image %}
+                    <img src="{{ url_for('uploaded_file', folder='posts', filename=post.image) }}" 
+                         alt="Post image" class="post-image">
+                    {% endif %}
                 </div>
                 <div class="post-meta">
                     <span>{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
