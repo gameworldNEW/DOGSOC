@@ -17,7 +17,14 @@
         </div>
         
         <div class="post-content">
+            {% if post.content %}
             <p>{{ post.content }}</p>
+            {% endif %}
+            
+            {% if post.image %}
+            <img src="{{ url_for('uploaded_file', folder='posts', filename=post.image) }}" 
+                 alt="Post image" class="post-image">
+            {% endif %}
         </div>
         
         <div class="post-stats">
